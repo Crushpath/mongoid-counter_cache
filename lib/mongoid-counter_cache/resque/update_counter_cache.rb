@@ -1,6 +1,7 @@
 module Mongoid
   module CounterCache
     class UpdateCounterCache
+      include Resque::Plugins::UniqueJob
 
       def self.queue
         Mongoid::CounterCache.resque_queue
