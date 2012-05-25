@@ -8,8 +8,8 @@ module Mongoid
       end
 
       def self.perform(object, id, relation)
-        object = object.constantize.find(id)
-        object.update_counter_cache(relation)
+        object = object.constantize.where(_id: id).first
+        object.update_counter_cache(relation) if object
       end
 
     end

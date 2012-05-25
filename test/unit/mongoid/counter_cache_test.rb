@@ -4,28 +4,12 @@ describe Mongoid::CounterCache do
 
   describe '.counter_cache' do
 
-    let(:offer) do
-      Offer.new
-    end
+    let(:offer) { Offer.new }
 
-    describe 'with a relation name of :product' do
-
-      it 'should create #update_product_count method' do
-        offer.methods.must_include(:update_product_count)
-        offer.product = Product.create
-        offer.update_product_count
+    it 'defines the needed methods' do
+      [:update_product_count, :update_store_count].each do |method|
+        offer.methods.must_include(method)
       end
-
-    end
-
-    describe 'with multiple relations' do
-
-      it 'should work the same' do
-        [:update_product_count, :update_store_count].each do |method|
-          offer.methods.must_include(method)
-        end
-      end
-
     end
 
     describe 'for each model' do
@@ -34,13 +18,13 @@ describe Mongoid::CounterCache do
         [Product.new, Store.new]
       end
 
-      it 'should include #update_counter_cache method' do
+      it 'defines #update_counter_cache' do
         models.each do |model|
           model.must_respond_to :update_counter_cache
         end
       end
 
-      it 'should have a corresponding async method' do
+      it 'defines #async_update_counter_cache' do
         models.each do |model|
           model.must_respond_to :async_update_counter_cache
         end
@@ -54,7 +38,7 @@ describe Mongoid::CounterCache do
 
     describe 'after save' do
 
-      it 'should update products_count for both old and new relation' do
+      it 'updates products_count for both parents' do
 
         store = Store.create
         product = Product.create
@@ -76,7 +60,7 @@ describe Mongoid::CounterCache do
 
     describe 'after destroy' do
 
-      it 'should update products_count for relation' do
+      it 'updates products_count for parent' do
 
         store = Store.create
         product = Product.create
@@ -90,6 +74,5 @@ describe Mongoid::CounterCache do
     end
 
   end
-
 
 end
