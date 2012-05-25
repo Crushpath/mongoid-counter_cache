@@ -9,9 +9,12 @@ Resque.inline = true
 Mongoid.database = Mongo::Connection.new().db('testdb')
 
 class MiniTest::Spec
-  before :each do
+
+  before(:each) do
     Mongoid.purge!
+    Resque.redis.flushall
   end
+
 end
 
 Turn.config.format = :outline
